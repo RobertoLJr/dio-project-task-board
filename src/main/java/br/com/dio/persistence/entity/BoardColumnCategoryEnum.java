@@ -5,5 +5,9 @@ public enum BoardColumnCategoryEnum {
     IN_PROGRESS,
     DONE,
     BLOCKED,
-    ARCHIVED
+    ARCHIVED;
+
+    public static BoardColumnCategoryEnum fromString(String name) {
+        return BoardColumnCategoryEnum.valueOf(name.toUpperCase());
+    }
 }
