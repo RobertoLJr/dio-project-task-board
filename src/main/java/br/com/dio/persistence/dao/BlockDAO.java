@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 
-import static br.com.dio.persistence.converter.OffsetDateTimeConverter.toTimestamp;
+import static br.com.dio.persistence.converter.InstantConverter.toTimestamp;
 
 @AllArgsConstructor
 public class BlockDAO {
@@ -17,7 +18,7 @@ public class BlockDAO {
         var sql = "INSERT INTO blocks (blocked_at, block_cause, card_id) VALUES (?, ?, ?);";
         try(var statement = connection.prepareStatement(sql)){
             var i = 1;
-            statement.setTimestamp(i ++, toTimestamp(OffsetDateTime.now()));
+            statement.setTimestamp(i ++, toTimestamp(Instant.now()));
             statement.setString(i ++, reason);
             statement.setLong(i, cardId);
             statement.executeUpdate();
@@ -25,10 +26,10 @@ public class BlockDAO {
     }
 
     public void unblock(final String reason, final Long cardId) throws SQLException{
-        var sql = "UPDATE BLOCKS SET unblocked_at = ?, unblock_cause = ? WHERE card_id = ? AND unblock_cause IS NULL;";
+        var sql = "UPDATE blocks SET unblocked_at = ?, unblock_cause = ? WHERE card_id = ? AND unblock_cause IS NULL;";
         try(var statement = connection.prepareStatement(sql)){
             var i = 1;
-            statement.setTimestamp(i ++, toTimestamp(OffsetDateTime.now()));
+            statement.setTimestamp(i ++, toTimestamp(Instant.now()));
             statement.setString(i ++, reason);
             statement.setLong(i, cardId);
             statement.executeUpdate();

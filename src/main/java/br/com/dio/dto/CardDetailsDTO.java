@@ -1,13 +1,13 @@
 package br.com.dio.dto;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 public record CardDetailsDTO(
         Long id,
         String title,
         String description,
         boolean blocked,
-        OffsetDateTime blockedAt,
+        Instant blockedAt,
         String blockCause,
         int blocksAmount,
         Long columnId,
