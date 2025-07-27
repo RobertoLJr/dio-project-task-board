@@ -23,7 +23,7 @@ public class BoardService {
             }).toList();
 
             for (var column : columns) {
-                boardColumnDAO.create(column);
+                boardColumnDAO.insert(column);
             }
             connection.commit();
 
