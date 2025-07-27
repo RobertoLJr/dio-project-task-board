@@ -36,7 +36,7 @@ public class BoardColumnDAO {
 
     public List<BoardColumnEntity> findBoardById(Long id) throws SQLException {
         List<BoardColumnEntity> boardColumns = new ArrayList<>();
-        String sql = "SELECT * FROM BOARDS_COLUMNS WHERE board_id = ? ORDER BY `order`;";
+        String sql = "SELECT * FROM board_columns WHERE board_id = ? ORDER BY `order`;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);

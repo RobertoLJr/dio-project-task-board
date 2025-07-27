@@ -28,12 +28,13 @@ public class MainMenu {
             System.out.println("4 - Exit");
             System.out.print("User Option: ");
             option = scanner.nextInt();
+            scanner.nextLine();
             switch (option) {
                 case 1 -> createBoard();
                 case 2 -> selectBoard();
                 case 3 -> deleteBoard();
                 case 4 -> System.exit(0);
-                default -> System.out.println("\nInvalid option. Try again.");
+                default -> System.out.println("Invalid option. Try again.");
             }
         }
     }
@@ -41,32 +42,33 @@ public class MainMenu {
     private void createBoard() throws SQLException {
         var entity = new BoardEntity();
         System.out.print("Inform the name of the board: ");
-        entity.setName(scanner.next());
+        entity.setName(scanner.nextLine());
 
-        System.out.print("\nHow many additional columns would you like to add (enter 0 if none)? ");
+        System.out.print("How many additional columns would you like to add (enter 0 if none)? ");
         int additionalColumn = scanner.nextInt();
+        scanner.nextLine();
 
         List<BoardColumnEntity> columns = new ArrayList<>();
-        System.out.print("\n>> Inform name of the first column: ");
-        var startingColumnName = scanner.next();
-        var startingColumn = createColumn(startingColumnName, BoardColumnCategoryEnum.TO_DO, 0);
+        System.out.print(">> Inform name of the first column: ");
+        var startingColumnName = scanner.nextLine();
+        var startingColumn = createColumn(startingColumnName, BoardColumnCategoryEnum.INITIAL, 0);
         columns.add(startingColumn);
 
-        for (int i = 0; i <= additionalColumn; i++) {
-            System.out.print("\n>> Inform name of pending asks column: ");
-            var pendingColumnName = scanner.next();
-            var pendingColumn = createColumn(pendingColumnName, BoardColumnCategoryEnum.TO_DO, i + 1);
+        for (int i = 0; i < additionalColumn; i++) {
+            System.out.print(">> Inform name of pending asks column: ");
+            var pendingColumnName = scanner.nextLine();
+            var pendingColumn = createColumn(pendingColumnName, BoardColumnCategoryEnum.PENDING, i + 1);
             columns.add(pendingColumn);
         }
 
-        System.out.print("\n>> Inform name of the final column: ");
-        var lastColumnName = scanner.next();
-        var lastColumn = createColumn(lastColumnName, BoardColumnCategoryEnum.TO_DO, additionalColumn + 1);
+        System.out.print(">> Inform name of the final column: ");
+        var lastColumnName = scanner.nextLine();
+        var lastColumn = createColumn(lastColumnName, BoardColumnCategoryEnum.FINAL, additionalColumn + 1);
         columns.add(lastColumn);
 
-        System.out.print("\n>> Inform name of the cancelling column: ");
-        var cancelColumnName = scanner.next();
-        var cancelColumn = createColumn(cancelColumnName, BoardColumnCategoryEnum.ARCHIVED, additionalColumn + 1);
+        System.out.print(">> Inform name of the board cancelling column: ");
+        var cancelColumnName = scanner.nextLine();
+        var cancelColumn = createColumn(cancelColumnName, BoardColumnCategoryEnum.CANCEL, additionalColumn + 2);
         columns.add(cancelColumn);
 
         entity.setBoardColumns(columns);
@@ -79,12 +81,13 @@ public class MainMenu {
     private void selectBoard() throws SQLException {
         System.out.print("Inform the id of the board to be selected: ");
         Long id = scanner.nextLong();
+        scanner.nextLine();
         try (Connection connection = ConnectionConfig.getConnection()) {
             BoardQueryService queryService = new BoardQueryService(connection);
             Optional<BoardEntity> optional = queryService.findById(id);
             optional.ifPresentOrElse(
                     b -> new BoardMenu(b).execute(),
-                    () -> System.out.println("\n>> Board not found.")
+                    () -> System.out.println(">> Board not found.")
             );
         }
     }
@@ -92,12 +95,13 @@ public class MainMenu {
     private void deleteBoard() {
         System.out.print("Inform the id of the board to be deleted: ");
         Long id = scanner.nextLong();
+        scanner.nextLine();
         try (Connection connection = ConnectionConfig.getConnection()) {
             var service = new BoardService(connection);
             if (service.delete(id)) {
-                System.out.printf("\n>> Board %s deleted successfully.%n", id);
+                System.out.printf(">> Board %s deleted successfully.%n", id);
             } else {
-                System.out.printf("\n>> Board %s not found.%n", id);
+                System.out.printf(">> Board %s not found.%n", id);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
